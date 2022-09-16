@@ -9,12 +9,11 @@ class AxiosService {
     return response.data.data;
   }
 
-  async getVersion(){
-    const lastVersion = await axios.get('https://ddragon.leagueoflegends.com/api/versions.json').then(response => {
-        return response.data[0]
-    })
-    return lastVersion
+  async getChampionDetail(name){
+    const response = await axios.get('http://ddragon.leagueoflegends.com/cdn/12.17.1/data/en_US/champion/'+name+'.json')
+    return response.data.data;
   }
+  
 }
 
 export default (new AxiosService());
