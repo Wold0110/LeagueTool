@@ -3,7 +3,6 @@ import { ScrollView, View, Text, Image, TouchableHighlight, ActivityIndicator} f
 import { useState, useEffect } from 'react';
 import AxiosService from '../AxiosService';
 
-
 export const ChampionHome = ({navigation}) => {
   const [output, setOutput] = useState([]);
   const [isLoading, setIsLoading] = useState(true); 
@@ -23,10 +22,10 @@ export const ChampionHome = ({navigation}) => {
       for(let i = 0; i < champarr.length;i++){
         let champion = JSON.parse(JSON.stringify(champarr[i]));
         var tempItem = (
-          <TouchableHighlight onPress={() => navigation.navigate('ChampionDetails', {
+          <TouchableHighlight key={i} onPress={() => navigation.navigate('ChampionDetails', {
             name: champion.id
           })}>
-            <View key={i}>
+            <View>
               <Text>{champion.name}</Text>
               <Image
                   style={{width: 50, height: 50}}

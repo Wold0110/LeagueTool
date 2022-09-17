@@ -34,7 +34,7 @@ export const ChampionDetails = () => {
             for(let i = 0; i < champarr[0].spells.length;i++){
                 let ability = champarr[0].spells[i];
                 var tempItem = (
-                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <View key={i} style={{ justifyContent: 'center', alignItems: 'center' }}>
                         <Text>{ability.name}</Text>
                         <Image
                             style={{width: 50, height: 50}}

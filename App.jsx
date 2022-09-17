@@ -3,10 +3,9 @@ import { View, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ChampionHome } from './ChampionScreen/ChampionHome';
-import SummonerScreen from './SummonerScreen';
+import SummonerDetails from './SummonerScreen/SummonerDetails';
 import { ChampionDetails } from './ChampionScreen/ChampionDetails';
-
-const APIURLBASE = 'http://ddragon.leagueoflegends.com/cdn';
+import { SummonerHome } from './SummonerScreen/SummonerHome';
 
 
 function HomeScreen({navigation}) {
@@ -26,8 +25,9 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Champions" component={ChampionHome} />
-        <Stack.Screen name="Summoners" component={SummonerScreen} />
+        <Stack.Screen name="Summoners" component={SummonerHome} />
         <Stack.Screen name="ChampionDetails" component={ChampionDetails} />
+        <Stack.Screen name="SummonerDetails" component={SummonerDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );
