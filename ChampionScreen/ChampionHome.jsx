@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, View, Text, Image, TouchableHighlight, ActivityIndicator} from 'react-native';
+import { ScrollView, View, Text, Image, ActivityIndicator, TouchableOpacity} from 'react-native';
 import { useState, useEffect } from 'react';
 import AxiosService from '../AxiosService';
 
@@ -22,17 +22,20 @@ export const ChampionHome = ({navigation}) => {
       for(let i = 0; i < champarr.length;i++){
         let champion = JSON.parse(JSON.stringify(champarr[i]));
         var tempItem = (
-          <TouchableHighlight key={i} onPress={() => navigation.navigate('ChampionDetails', {
+          <TouchableOpacity style={{  alignItems: 'center',
+            justifyContent: 'center',
+            elevation: 8,
+            width: '20%',
+            margin: 6 }} key={i} onPress={() => navigation.navigate('ChampionDetails', {
             name: champion.id
           })}>
-            <View>
-              <Text>{champion.name}</Text>
+            <View style={{ justifyContent: 'center', }}>
               <Image
-                  style={{width: 50, height: 50}}
-                  source={{uri: imgURL(champion.id)}}
-                  />
+                style={{ borderRadius: 2, justifyContent: 'center', alignSelf: 'center', width: 75, height: 75}}
+                source={{uri: imgURL(champion.id)}}
+                />
             </View>
-          </TouchableHighlight>
+          </TouchableOpacity>
         );
         axiosOutput.push(tempItem);
       }
@@ -42,12 +45,13 @@ export const ChampionHome = ({navigation}) => {
   },[])  
 
   if(isLoading){
-    return <ActivityIndicator style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} size="large"/>
+    return <ActivityIndicator style={{ flex: 1, justifyContent: 'center', alignSelf: 'center' }} size="large" color="#F2EFDE"/>
   }
 
   return (
     <ScrollView>
-      <View>
+      <View style={{ marginTop: 50, justifyContent: 'center', flexDirection: 'row',
+        flexWrap: 'wrap' }}>
         { output }
       </View>
     </ScrollView>

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const apiKey= "RGAPI-73a2569d-b6a9-4e82-bedb-c306ba98d75c";
+const apiKey= "RGAPI-e86c5c64-092a-4703-a23e-00bec5d7a0f7";
 
 class AxiosService {
   constructor() {

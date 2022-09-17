@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, View, Text, Image, ActivityIndicator, TouchableHighlight } from 'react-native';
+import { ScrollView, View, Text, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
 import AxiosService from '../AxiosService';
@@ -38,7 +38,6 @@ const SummonerDetails = ({navigation}) => {
     }
 
     const masteryIcon = (level) => {
-        let url;
         if (level == 1) return 'https://static.wikia.nocookie.net/leagueoflegends/images/d/d8/Champion_Mastery_Level_1_Flair.png/'
         else if (level == 2) return 'https://static.wikia.nocookie.net/leagueoflegends/images/4/4d/Champion_Mastery_Level_2_Flair.png/'
         else if (level == 3) return 'https://static.wikia.nocookie.net/leagueoflegends/images/e/e5/Champion_Mastery_Level_3_Flair.png/'
@@ -46,15 +45,15 @@ const SummonerDetails = ({navigation}) => {
         else if (level == 5) return 'https://static.wikia.nocookie.net/leagueoflegends/images/9/96/Champion_Mastery_Level_5_Flair.png/'
         else if (level == 6) return 'https://static.wikia.nocookie.net/leagueoflegends/images/b/be/Champion_Mastery_Level_6_Flair.png/'
         else return 'https://static.wikia.nocookie.net/leagueoflegends/images/7/7a/Champion_Mastery_Level_7_Flair.png/'
-        return url;
     }
 
     useEffect(() => {
         AxiosService.getChampions()
         .then(data => {
-            var champarr = [];
+            var champdict = {};
             Object.keys(data).forEach(function(key){
-                champarr.push(data[key]);
+                let champId = data[key].key;
+                champdict[champId] = data[key];
             })
             AxiosService.getSummonerId(route.params.name, route.params.server).then(response => {
                 setProfile(response)
@@ -62,35 +61,30 @@ const SummonerDetails = ({navigation}) => {
                 var mastery = [];
                 AxiosService.getSummonerMastery(response.id, route.params.server).then(res =>{
                     for (let i in res){
-                        for (let j in champarr) {
-                            if (champarr[j].key == res[i].championId) {
-                              top3champs.push(champarr[j])
-                              mastery.push(res[i])
-                              break;
-                            }
-                        }
+                        top3champs.push(champdict[res[i].championId])
+                        mastery.push(res[i]);
                     }
                     let viewOutput = [];
                     for (let i = 0; i < top3champs.length;i++){
                         let champion = top3champs[i];
                         let masteryTemp = mastery[i];
                         let tempItem = (
-                            <View key={i} style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                <TouchableHighlight onPress={() => navigation.navigate('ChampionDetails', {name: champion.id})}>
-                                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                        <Text>{champion.name}</Text>
+                            <View style={{ justifyContent:'center', marginHorizontal: 5, marginTop: 20 }} key={i}>
+                                <TouchableOpacity onPress={() => navigation.navigate('ChampionDetails', {name: champion.id})}>
+                                    <View style={{ justifyContent:'center'}}>
+                                        <Text style={{ color:'white', textAlign:'center', fontSize:15, fontWeight:'bold' }}>{champion.name}</Text>
                                         <Image
-                                            style={{width: 50, height: 50}}
+                                            style={{width: 60, height: 60, alignSelf:'center'}}
                                             source={{uri: imgURL(champion.id)}}
                                         />
                                     </View>
-                                </TouchableHighlight>
-                                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                </TouchableOpacity>
+                                <View style={{ justifyContent:'center'}}>
                                     <Image
-                                        style={{width: 50, height: 50}}
+                                        style={{width: 50, height: 50, alignSelf:'center'}}
                                         source={{uri: masteryIcon(masteryTemp.championLevel)}}
                                     />
-                                    <Text>{masteryTemp.championPoints} Points</Text>
+                                    <Text style={{ color:'white', textAlign:'center' }}>{masteryTemp.championPoints} Points</Text>
                                 </View>
                             </View>
                         );
@@ -101,14 +95,15 @@ const SummonerDetails = ({navigation}) => {
                         for(let i = 0; i < re.length;i++){
                             let ranked = re[i];
                             let tempItem = (
-                                <View key={i} style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                    <Text>{returnQType(ranked.queueType)}:</Text>
+                                <View style={{ justifyContent:'center', marginHorizontal: 10, marginTop: 20 }} key={i}>
+                                    <Text style={{ textAlign:'center', color:'white', fontSize:18, fontWeight:'bold' }}>{returnQType(ranked.queueType)}:</Text>
                                     <Image
-                                        style={{width: 50, height: 50}}
+                                        style={{width: 60, height: 60, alignSelf:'center'}}
                                         source={{uri: rankedIcon(ranked.tier)}}
                                     />
-                                    <Text>{ranked.tier} {ranked.rank}, {ranked.leaguePoints} LP</Text>
-                                    <Text>{ranked.wins}W / {ranked.losses}L, {returnWLP(ranked.wins, ranked.losses)}%</Text>
+                                    <Text style={{ textAlign:'center', color:'white' }}>{ranked.tier} {ranked.rank}, {ranked.leaguePoints} LP</Text>
+                                    <Text style={{ textAlign:'center', color:'white' }}>{ranked.wins}W / {ranked.losses}L</Text>
+                                    <Text style={{ textAlign:'center', color:'white' }}>{returnWLP(ranked.wins, ranked.losses)}%</Text>
                                 </View>
                             );
                             rankTemp.push(tempItem);
@@ -123,25 +118,25 @@ const SummonerDetails = ({navigation}) => {
   },[])  
 
   if(isLoading){
-    return <ActivityIndicator style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} size="large"/>
+    return <ActivityIndicator style={{ flex: 1, justifyContent: 'center', alignSelf: 'center' }} size="large" color="#F2EFDE"/>
   }
     
     return (
-        <ScrollView>
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Text>{profile.name}</Text>
+        <View style={{ flex:1, marginHorizontal: 20, justifyContent:'center'}}>
+            <View style={{ backgroundColor:'#0c1923', borderTopLeftRadius:10, borderTopRightRadius:10, paddingTop:10}}>
+                <Text style={{ fontSize:30, textAlign: 'center', color:'#fff', fontWeight:'bold' }}>{profile.name}</Text>
                 <Image
-                    style={{width: 50, height: 50}}
+                    style={{width: 75, height: 75, alignSelf:'center', borderRadius:50 }}
                     source={{uri: profileIcon(profile.profileIconId)}}
                 />
             </View>
-            <View>
+            <View style={{justifyContent:'center', flexDirection: 'row', flexWrap: 'wrap', backgroundColor:'#0c1923' }}>
                 {rank}
             </View>
-            <View>
+            <View style={{justifyContent:'center', flexDirection: 'row', flexWrap: 'wrap', backgroundColor:'#0c1923', borderBottomLeftRadius:10, borderBottomRightRadius:10, paddingBottom:10}} >
                 {output}
             </View>
-        </ScrollView>
+        </View>
     );
 }
 

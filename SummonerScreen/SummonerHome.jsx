@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
-import {View, Button, TextInput} from 'react-native'
+import {View, Button, TextInput, TouchableOpacity, Text} from 'react-native'
 import {Picker} from '@react-native-picker/picker';
 
 export const SummonerHome = ({navigation}) => {
@@ -8,25 +8,23 @@ export const SummonerHome = ({navigation}) => {
   const [selectedServer, setSelectedServer] = useState();
 
   return (
-    <View>
+    <View style={{ marginTop: 50, padding: 30 }}>
       <TextInput 
         onChangeText={setSummonerName}
         value={summonerName}
         placeholder={"Write summoner's name here"}
-        style={{
-          height: 40,
-          margin: 12,
-          borderWidth: 1,
-          padding: 10,
-        }}
+        placeholderTextColor="#fff"
+        style={{ backgroundColor:'#1E374B', elevation:8, marginBottom:15, height:50, color:'white' }}
       />
       <Picker
         selectedValue={selectedServer}
         onValueChange={(itemValue, itemIndex) =>
           setSelectedServer(itemValue)
         }
+        style={{ color: 'white', elevation: 8, marginBottom: 15, backgroundColor:'#1E374B', height:50  }}
         mode={"dropdown"}
-        dropdownIconRippleColor={"gray"}
+        dropdownIconColor={'white'}
+        dropdownIconRippleColor={"#6E908B"}
         >
         <Picker.Item label="Select a server!" enabled={false} />
         <Picker.Item label="Europe Nordic and East" value="eun1" />
@@ -40,11 +38,14 @@ export const SummonerHome = ({navigation}) => {
         <Picker.Item label="Russia" value="ru" />
         <Picker.Item label="Turkey" value="tr1" />
       </Picker>
-      <Button onPress={() => navigation.navigate('SummonerDetails', {
+      <TouchableOpacity style={{ borderRadius: 10, height: 45, backgroundColor: '#6E908B', elevation:8 }} onPress={() => navigation.navigate('SummonerDetails', {
           name: summonerName,
           server: selectedServer
-        })} title="Search">
-      </Button>
+        })}>
+          <Text style={{ fontSize:30, textAlign: 'center', alignSelf:'center', color:'#fff', fontWeight:'bold' }}>
+            Search
+          </Text> 
+        </TouchableOpacity>
     </View>
   )
 }
